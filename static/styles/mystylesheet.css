@@ -1,0 +1,53 @@
+body  {
+  background-image: url("nobles_background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.leftSide {
+  display: inline-block;
+  height: 50vh;
+  width: 45vw;
+  border: 5px solid red;
+
+}
+
+.infoBoxDiv {
+  display: inline-block;
+  box-sizing: border-box;
+  border: 5px solid red;
+  height: 50vh;
+  width: 45vw;
+  /*padding: 5vh 5vw;*/
+  vertical-align: bottom;
+}
+
+.infoBox {
+  background: white;
+  white-space: pre-wrap;
+  border: 5px solid black;
+  box-shadow: 10px 10px 5px black;
+  height: 30vh;
+  padding: 2vh 2vw;
+  font-size: 15px
+}
+
+.headerBoxOne {
+  box-sizing: border-box;
+  padding: 0px 10px 0px 10px;
+  background: white;
+  border: 3px solid black;
+  box-shadow: 10px 10px 5px black;
+  font-weight: bold;
+  font-size: 30px
+}
+
+.headerBoxTwo {
+  box-sizing: border-box;
+  padding: 0px 10px 0px 10px;
+  background: white;
+  border: 3px solid black;
+  box-shadow: 10px 10px 5px black;
+  font-weight: bold;
+  font-size: 20px
+}
