@@ -71,9 +71,9 @@ def get_song():
     return request.form["url"]
 
 if __name__ == "__main__":
-	bind = sys.argv[1]
-
-	if not bind:
-		bind = "127.0.0.1"
+	bind = "127.0.0.1"
+	
+	if len(sys.argv) == 2:
+		bind = sys.argv[1]
 
 	app.run(host=bind)
