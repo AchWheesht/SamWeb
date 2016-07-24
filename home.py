@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 import nobles_management_beta
 import misc_tools
 import json
+import sys
 
 app = Flask(__name__)
 NobleManager = nobles_management_beta.NobleManager()
@@ -70,4 +71,9 @@ def get_song():
     return request.form["url"]
 
 if __name__ == "__main__":
-    app.run()
+	bind = "127.0.0.1"
+	
+	if len(sys.argv) == 2:
+		bind = sys.argv[1]
+
+	app.run(host=bind)
