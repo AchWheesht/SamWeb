@@ -3,13 +3,14 @@
 
 function sendData(form) {
   var xhttp = new XMLHttpRequest();
+  //var form = document.getElementById("wikiInput");
   var fd = new FormData(form);
   xhttp.addEventListener("load", function(event) {
     var raw_response = event.target.responseText;
     return raw_response
   });
   console.log("in sendData");
-  xhttp.open("get", "/get_song");
+  xhttp.open("POST", "http://localhost:5000/get_song");
   xhttp.send(fd);
 }
 
@@ -30,8 +31,8 @@ function test() {
 <h3 align="center">A script to generate classic Irish folk songs</h3>
 <div class="topDiv" id="topDiv">
   <form id="wikiInput">
-    <input class="wikiFormInput" type="text" value="Put a wiki link here!">
-    <input class="wikiFormButton" type="submit" value ="Submit Link" onclick="grabSong(this.form)">
+    <input class="wikiFormInput" type="text" name="url" value="Put a wiki link here!">
+    <input class="wikiFormButton" type="button" value ="Submit Link" onclick="grabSong(this.form)">
 </div>
 <div class="leftDiv" id="leftDiv">
   <p class="chain">ChainHere</p>
