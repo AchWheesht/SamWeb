@@ -20,6 +20,20 @@
     </select>
     <input type="submit" value="Do the thing">
   </form>
+<h3 class="headerBoxTwo">Job Centre</h3>
+<form>
+  <select id="nobleList">
+    {% for item in name_list %}
+      <option value={{item[1]}}>{{item[0]}}</option>
+    {% endfor %}
+  </select>
+  <select id="jobList">
+    <option>Placeholder1</option>
+    <option>Placeholder2</option>
+  </select>
+  <button>Hire</button>
+  <button>Fire</button>
+</form>
 </div>
 <div class="infoBoxDiv">
   <pre id="infobox" class="infoBox">Info goes here</pre>
@@ -36,8 +50,8 @@ window.addEventListener("load", function() {
       var response = eval('(' + raw_response + ')');
       console.log(response);
 //    document.getElementById("infobox").innerHTML = event.target.responseText
-      document.getElementById("infobox").innerHTML = response[0]
-      document.getElementById("nobleList").innerHTML = response[1]
+      document.getElementById("infobox").innerHTML = response[0];
+      if (response[1]) {document.getElementById("nobleList").innerHTML = response[1]};
     });
 
     xhttp.open("POST", "/noblepost");

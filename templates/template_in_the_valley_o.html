@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<script>
+
+function sendData(form) {
+  var xhttp = new XMLHttpRequest();
+  var fd = new FormData(form);
+  xhttp.addEventListener("load", function(event) {
+    var raw_response = event.target.responseText;
+    return raw_response
+  });
+  console.log("in sendData");
+  xhttp.open("get", "/get_song");
+  xhttp.send(fd);
+}
+
+
+function grabSong(form) {
+  console.log("in grabSong");
+  raw_response = sendData(form);
+  console.log(raw_response);
+};
+
+function test() {
+  console.log("testing...")
+};
+</script>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/css_in_the_valley_o.css') }}">
+<h1 align="center">WIKI IN THE VALLEY-O'</h1>
+<h3 align="center">A script to generate classic Irish folk songs</h3>
+<div class="topDiv" id="topDiv">
+  <form id="wikiInput">
+    <input class="wikiFormInput" type="text" value="Put a wiki link here!">
+    <input class="wikiFormButton" type="submit" value ="Submit Link" onclick="grabSong(this.form)">
+</div>
+<div class="leftDiv" id="leftDiv">
+  <p class="chain">ChainHere</p>
+</div>
+<div class="rightDiv" id="rightDiv" align="right">
+  <p class="lyrics" align="left">Song Here</p>
+</div>

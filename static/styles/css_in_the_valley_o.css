@@ -1,0 +1,52 @@
+body {
+  background-color: lightgreen;
+}
+
+.topDiv {
+  display: inline-block;
+  width: 97vw;
+  /*border: 5px solid red;*/
+}
+
+
+.wikiFormInput {
+  width: 80%;
+  font-size: x-large;
+}
+
+.wikiFormButton {
+  float: right;
+  width: 15%;
+  font-size: x-large;
+}
+
+.leftDiv {
+  display: inline-block;
+  width: 30vw;
+  height: 75vh;
+  /*border: 5px solid red;*/
+}
+
+.chain {
+  background-color: white;
+  height: 95%;
+  border: 2px solid black;
+  box-shadow: 10px 10px 5px black;
+}
+
+.rightDiv {
+  display: inline-block;
+  float: right;
+  width: 65vw;
+  height: 75vh;
+  /*border: 5px solid red;*/
+}
+
+.lyrics {
+  float: left;
+  background-color: white;
+  height: 95%;
+  width: 95%;
+  border: 2px solid black;
+  box-shadow: 10px 10px 5px black;
+}
