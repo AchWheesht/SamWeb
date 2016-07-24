@@ -64,9 +64,10 @@ def deleteall():
 def wiki_in_the_valley_o():
     return render_template("template_in_the_valley_o.html")
 
-@app.route("/get_song", methods=["GET"])
+@app.route("/get_song", methods=["POST"])
 def get_song():
     print("INVOKED")
-    return("Hi web page!")
+    return request.form["url"]
+
 if __name__ == "__main__":
     app.run()
