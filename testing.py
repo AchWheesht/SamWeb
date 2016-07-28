@@ -1,4 +1,3 @@
-alist = [1, 2, 3, 4, 5]
+string = "https://en.wikipedia.org/wiki/Help:IPA_for_English"
 
-for i in range(len(alist)-1, -1, -1):
-    print(alist[i])
+print(string[:35])

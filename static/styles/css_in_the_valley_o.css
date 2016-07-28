@@ -2,6 +2,22 @@ body {
   background-color: lightgreen;
 }
 
+.leftBufferDiv {
+  display: inline-block;
+  width: 25vw;
+}
+
+.headerDiv {
+  display: inline-block;
+  left: 25vw;
+  width: 50vw;
+}
+
+.rightBufferDiv {
+  display: inline-block;
+  width: 20vw;
+}
+
 .topDiv {
   display: inline-block;
   width: 97vw;
@@ -22,7 +38,7 @@ body {
 
 .leftDiv {
   display: inline-block;
-  width: 30vw;
+  width: 20vw;
   height: 75vh;
   /*border: 5px solid red;*/
 }
@@ -32,12 +48,14 @@ body {
   height: 95%;
   border: 2px solid black;
   box-shadow: 10px 10px 5px black;
+  overflow: chain
 }
 
 .rightDiv {
   display: inline-block;
   float: right;
-  width: 65vw;
+  text-align: left;
+  width: 75vw;
   height: 75vh;
   /*border: 5px solid red;*/
 }
@@ -49,4 +67,5 @@ body {
   width: 95%;
   border: 2px solid black;
   box-shadow: 10px 10px 5px black;
+  overflow: scroll;
 }

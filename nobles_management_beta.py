@@ -14,25 +14,8 @@ class NobleManager:
         self.noble_creator_instance = NobleCreator(self)
 
     def run_events(self):
-        string = ""
-        action_performed = set()
-        for noble in self.compile_instance_list():
-            if not noble in action_performed:
-                result = noble.perform_action()
-                result = list(reversed(result))
-                for item in result:
-                    string += str(item[0])
-                    string += "\n"
-                    if item[1]:
-                        action_performed.add(item[2])
-                hit_list = []
-                for noble in self.compile_instance_list():
-                    if noble.marked_for_death == True:
-                        hit_list.append(noble.full_name)
-                for name in hit_list:
-                    string += self.execute_noble(name)
-                string += "\n"
-        return string
+        noble_runner = NobleRunner(self, self.compile_instance_list())
+        return noble_runner.run_events()
 
     def compile_instance_list(self):
         noble_list = []
@@ -43,7 +26,7 @@ class NobleManager:
     def torment_nobles(self):
         for noble in self.compile_instance_list():
             noble.happiness -= 1
-            print("\nYou make {} very unhappy!".format(noble.full_name))
+            return "\nYou make {} very unhappy!".format(noble.full_name)
 
     def list_names(self):
         return self.id_lookup
@@ -59,15 +42,14 @@ class NobleManager:
         return string
 
     def view_single_noble(self, name):
-        print("In here!")
-        print(name)
         if type(name) == int:
             name = get_name_from_id(name)
         noble = self.noble_instances[name]
         return "{}\nNobility: {}\nWealth: {}\nHappiness: {}".format(noble.extended_title, noble.nobility, noble.wealth, noble.happiness)
 
     def execute_noble(self, full_name, death_message = None):
-        if not death_message: death_message = self.noble_instances[full_name].death_message
+        noble_instance = self.noble_instances[full_name]
+        if not death_message: death_message = noble_instance.death_message
         del self.noble_dictionary[full_name]
         del self.noble_instances[full_name]
         self.noble_instances = self.load_instances()
@@ -104,7 +86,6 @@ class NobleManager:
         for name, noble in self.noble_instances.items():
             noble_welcomes.append(noble.welcome_noble(new_noble_instance))
         self.noble_dictionary[new_noble_instance.full_name] = new_noble_instance.compile_dict()
-        print(self.noble_dictionary[new_noble_instance.full_name])
         self.id_lookup.append((new_noble_instance.full_name, new_noble_instance.id))
         self.noble_instances[new_noble_instance.full_name] = new_noble_instance
         self.save_file()
@@ -194,7 +175,6 @@ class NobleInstance(NobleManager):
             result = self.end_it()
         if not action: action = random.choice(self.available_actions)
         if not result: result = action(*args)
-        result[-1] = (result[-1][0], result[-1][1], self)
         self.save_self()
         return result
 
@@ -202,21 +182,21 @@ class NobleInstance(NobleManager):
         result = "{0} isn't looking too happy...".format(self.full_name)
         self.marked_for_death = True
         self.death_message = "{0}  is far too unhappy to be a noble. They slink off into solitude. Goodbye, {0}!".format(self.full_name)
-        return [(result, True)]
+        return result
 
     def duel_noble(self):
         valid_list = []
         for name, value in self.relations.items():
             if value <= 3: valid_list.append(self.noble_manager.noble_instances[name])
-        if not valid_list: return [("{} is itching for a fight, but finds themselves surrounded by caring friends!".format(self.full_name), True)]
+        if not valid_list: return "{} is itching for a fight, but finds themselves surrounded by caring friends!".format(self.full_name)
         duel_receiver = random.choice(valid_list)
         result = "{} challenges {} to a duel!".format(self.full_name, duel_receiver.full_name)
-        reaction = duel_receiver.perform_action(duel_receiver.receive_duel_proposal, self)
-        result += reaction[0][0]
+        reaction = duel_receiver.receive_duel_proposal(self)
+        result += reaction
         if duel_receiver.ram_status == False:
-            return [(result, True)]
+            return result
         elif duel_receiver.ram_status == True:
-            result += "\n{} and {} wake at dawn and face each other across the duelling field. The air is thick with tension, sweat, and ridiculous upper class gestures".format(self.full_name, duel_receiver.full_name)
+            result += "\n{} and {} wake at dawn and face each other across the duelling field. The air is thick with tension, sweat, and ridiculous upper class gestures.".format(self.full_name, duel_receiver.full_name)
             winner = random.choice([self, duel_receiver])
             if winner == self:
                 loser = duel_receiver
@@ -224,29 +204,28 @@ class NobleInstance(NobleManager):
                 loser = self
             result += "\n{0} shoots first! {1} is no more. Goodbye, {1}!".format(winner.full_name, loser.full_name)
             loser.marked_for_death = True
-            loser.death_message = "{} is laid to rest by his family friends. Such is the difficult life of the nobility".format(loser.full_name)
+            loser.death_message = "{} is laid to rest by their family and friends. Such is the difficult life of the nobility.".format(loser.full_name)
             winner.honour += 1
             winner.happiness += 1
             winner.ram_status = None
-            print(result)
-            return[(result, True)]
+            return result
 
     def receive_duel_proposal(self, duel_proposer):
         bravery_roll = random.randint(1, 10)
         if bravery_roll <= self.honour:
-            result = "\n{} accepts the duel! Pistols at dawn".format(self.full_name)
+            result = "\n{} accepts the duel - Pistols at dawn!".format(self.full_name)
             self.ram_status = True
         else:
             result = "\n{} refuses the duel. Coward!".format(self.full_name)
             self.ram_status = False
             self.happiness -= 1
-        return [(result, False)]
+        return result
 
 
     def do_fuck_all(self):
         self.happiness += 1
         result = "{} sits on their arse for a week. They get happier. Feudalism!".format(self.full_name)
-        return [(result, True)]
+        return result
 
     def invest_capital(self):
         success = random.randrange(-50, 100, 1)
@@ -259,7 +238,7 @@ class NobleInstance(NobleManager):
             self.happiness += 1
             result = "{} takes a chance with an internet startup, and is suddenly rolling in cash!".format(self.full_name)
         self.wealth = int(self.wealth*(1 + percentage))
-        return [(result, True)]
+        return result
 
     def prank_noble(self, prankee=None):
         if not prankee:
@@ -270,28 +249,29 @@ class NobleInstance(NobleManager):
             if not candidate_list: return "{} wants to prank someone, but loves everyone too much!".format(self.full_name)
             prankee = random.choice(candidate_list)
         prankee_instance = self.noble_manager.noble_instances[prankee]
-        reaction = prankee_instance.perform_action(prankee_instance.get_pranked, self)
         result = "{} pulls a hilarious prank on {}!".format(self.full_name, prankee_instance.full_name)
-        return[reaction[0], (result, True)]
+        reaction = prankee_instance.get_pranked(self)
+        result += reaction
+        return result
 
     def get_pranked(self, pranker=None):
         if not pranker:
-            result = "{} gets pranked by a ghost. Spooky! (Error)".format(self.full_name)
+            result = "\n{} gets pranked by a ghost. Spooky! (Error)".format(self.full_name)
         else:
             outcome = random.randint(1, 3)
             if outcome == 1:
                 self.happiness += 1
-                result = "{} finds everything in their office wrapped in cellophane. What fun!".format(self.full_name)
+                result = "\n{} finds everything in their office wrapped in cellophane. What fun!".format(self.full_name)
             elif outcome == 2:
                 self.happiness -= 1
                 self.relations[pranker.full_name] -= 3
-                result =  "While walking down main street, {0} is ambushed by clowns! {0} hate clowns!".format(self.full_name)
+                result =  "\nWhile walking down main street, {0} is ambushed by clowns! {0} hate clowns!".format(self.full_name)
             elif outcome == 3:
                 self.happiness -= 3
                 self.wealth = int(self.wealth * 0.8)
                 self.relations[pranker.full_name] -= 3
-                result = "{} comes home to find their house on fire. Wait, that's not a prank - that's arson!".format(self.full_name)
-        return [(result, False)]
+                result = "\n{} comes home to find their house on fire. Wait, that's not a prank - that's arson!".format(self.full_name)
+        return result
 
 
     def welcome_noble(self, new_noble):
@@ -327,6 +307,40 @@ class NobleInstance(NobleManager):
 
     def __repr__(self):
         return '<instance of noble {}>'.format(self.full_name)
+
+class NobleRunner:
+    def __init__(self, noble_manager, action_list):
+        self.noble_manager = noble_manager
+        self.action_list = action_list
+
+    def run_events(self):
+        string = ""
+        for noble in self.action_list:
+            if noble.marked_for_death:
+                string += "{} would do something, but most of their time is being taken up by being dead".format(noble.full_name)
+            else:
+                string += "\n\n"
+                string += noble.perform_action()
+                death_message = self.check_for_deaths()
+                if death_message:
+                    string += "\n" + death_message
+        return string
+
+    def check_for_deaths(self):
+        death_list = []
+        for name, noble in self.noble_manager.noble_instances.items():
+            if noble.marked_for_death == True:
+                death_list.append((name, noble))
+        for name, noble in death_list:
+            if noble in self.action_list:
+                self.action_list.remove(noble)
+            return self.noble_manager.execute_noble(name)
+
+    def __str__(self):
+        return "An instance of class NobleRunner"
+
+    def __repr__(self):
+        return "<instance of class NobleRunner>"
 
 class NobleCreator(NobleManager):
     """It's called NobleCreator. Take a wild guess as to what it does"""

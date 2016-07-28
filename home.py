@@ -1,8 +1,8 @@
-
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 import nobles_management_beta
 import misc_tools
 import json
+import valley_generator
 
 app = Flask(__name__)
 NobleManager = nobles_management_beta.NobleManager()
@@ -67,7 +67,27 @@ def wiki_in_the_valley_o():
 @app.route("/get_song", methods=["POST"])
 def get_song():
     print("INVOKED")
-    return request.form["url"]
+    url = request.form["url"]
+    print(url[:25])
+    if url[:24] != "https://en.wikipedia.org" and url[:25] != "https://www.wikipedia.org":
+        return json.dumps(("use a wikipedia url!", "use a wikipedia url!"))
+    list_and_song = valley_generator.make_a_song(url)
+    print("List:\n\n", list_and_song[0])
+    print("Song:\n\n", list_and_song[1])
+    list_and_song[0] = list_to_string(list_and_song[0])
+    response = json.dumps(list_and_song)
+    return response
+
+@app.route("/wiki_in_the_valley_o/about")
+def about_wiki():
+    return render_template("about_wiki.html")
+
+def list_to_string(the_list):
+    string = ""
+    for item in the_list:
+        string += item
+        string += "\n"
+    return string
 
 if __name__ == "__main__":
     app.run()

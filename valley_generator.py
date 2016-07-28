@@ -71,10 +71,20 @@ def get_next_url(url):
     #wiki_page_text = remove_tags(wiki_page.text, "\(", "\)")
     paras = re.findall("(<p>.*?</p>|<li>.*?</li>)", wiki_page_text)
     for i in range(len(paras)):
-        para = paras[i]
-        para = remove_tags(para, "\(", "\)")
+        raw_para = paras[i]
+        para = remove_tags(raw_para, "\(", "\)")
+        raw_links = regex_url(raw_para, True)
+        raw_links_modified = []
+        for item in raw_links:
+            raw_links_modified.append(remove_tags(item, "\(", "\)"))
         links = regex_url(para, True)
-        if links: break
+        if links:
+            links[:] = [x for x in links if links[:35] != "https://en.wikipedia.org/wiki/Help"]
+            for i in range(len(links)):
+                if links[i] in raw_links_modified:
+                    location = raw_links_modified.index(links[i])
+                    links[i] = raw_links[location]
+            break
     print(links)
     try:
         link = links[0][:-1]
@@ -90,7 +100,8 @@ def find_full_list(starting_url):
         print("Analysing %s...\n\n" % next_url)
         next_url = get_next_url(next_url)
         if next_url in full_list:
-            full_list.append(next_url)
+            location = full_list.index(next_url)
+            full_list = full_list[:(location + 1)]
             break
         if next_url == "https://en.wikipedia.org/wiki/Philosophy":
             full_list.append(next_url)
@@ -130,15 +141,20 @@ def save_song(song, first_link):
         file.write(song)
     print('Song saved as "%s"' % file_name)
 
-user_input = input("Which wiki article?")
-full_list = find_full_list(user_input)
+def make_a_song(url):
+    full_list = find_full_list(url)
 
-for item in full_list:
-    print(item)
+    for item in full_list:
+        print(item)
 
-formatted_list = format_list(full_list)
-song = build_song(full_list)
-save_song(song, formatted_list[0])
+    formatted_list = format_list(full_list)
+    song = build_song(full_list)
+    return [full_list, song]
+
+if __name__ == "__main__":
+    url = input("Which wiki article?")
+    make_a_song(url)
+    save_song(song, formatted_list[0])
 
 # link_list = [
 #     "https://en.wikipedia.org/wiki/Python",
