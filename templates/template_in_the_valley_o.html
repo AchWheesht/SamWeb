@@ -4,7 +4,7 @@ function sendData(form) {
   var xhttp = new XMLHttpRequest();
   var fd = new FormData(form);
   console.log("in sendData");
-  xhttp.open("POST", "http://127.0.0.1:5000/get_song");
+  xhttp.open("POST", "/get_song");
   xhttp.send(fd);
   xhttp.onreadystatechange=function() {
      if (xhttp.readyState==4) {
