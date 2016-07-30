@@ -1,5 +1,26 @@
 <!DOCTYPE html>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/nobles_stylesheet.css') }}">
+
+<script>
+function sendData(form) {
+  var xhttp = new XMLHttpRequest();
+  var fd = new FormData(form);
+  console.log("in sendData");
+  xhttp.open("POST", "/nobles_play");
+  xhttp.send(fd);
+  xhttp.onreadystatechange=function() {
+     if (xhttp.readyState==4) {
+      var raw_response=(xhttp.responseText);
+      console.log("got here");
+      var response = eval('(' + raw_response + ')');
+      document.getElementById("infobox").innerHTML = response[0];
+      document.getElementById("nobleList").innerHTML = response[1];
+    };
+  };
+
+};
+</script>
+
 <div class="leftSide">
   <h1 class="headerBoxOne">NOBLE HEADQUARTERS</h1>
   <h3 class="headerBoxTwo">Play God</h3>
@@ -15,25 +36,13 @@
     <select name="action">
       <option value="viewInfo">View Info</option>
       <option value="executeNoble">Execute Noble</option>
-      <option value="employNoble">Employ Noble</option>
-      <option value="fireNoble">Fire Noble</option>
     </select>
     <input type="submit" value="Do the thing">
   </form>
-<h3 class="headerBoxTwo">Job Centre</h3>
-<form>
-  <select id="nobleList">
-    {% for item in name_list %}
-      <option value={{item[1]}}>{{item[0]}}</option>
-    {% endfor %}
-  </select>
-  <select id="jobList">
-    <option>Placeholder1</option>
-    <option>Placeholder2</option>
-  </select>
-  <button>Hire</button>
-  <button>Fire</button>
-</form>
+  <h3 class="headerBoxTwo">Noble Playground</h3>
+  <form>
+    <input type="button" value="Let the nobles play!" onclick="sendData(this.form)">
+  </form>
 </div>
 <div class="infoBoxDiv">
   <pre id="infobox" class="infoBox">Info goes here</pre>

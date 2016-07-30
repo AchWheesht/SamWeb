@@ -1,5 +1,6 @@
 import requests
 import re
+import time
 
 final_string = ""
 
@@ -66,9 +67,9 @@ def remove_tags(page, open_tag, close_tag):
 
 def get_next_url(url):
     """uses request to find the next link in the wiki chain"""
+    time.sleep(0.5)
     wiki_page = requests.get(url)
     wiki_page_text = remove_tags(wiki_page.text, "<table", "</table>")
-    #wiki_page_text = remove_tags(wiki_page.text, "\(", "\)")
     paras = re.findall("(<p>.*?</p>|<li>.*?</li>)", wiki_page_text)
     for i in range(len(paras)):
         raw_para = paras[i]
@@ -79,7 +80,7 @@ def get_next_url(url):
             raw_links_modified.append(remove_tags(item, "\(", "\)"))
         links = regex_url(para, True)
         if links:
-            links[:] = [x for x in links if links[:35] != "https://en.wikipedia.org/wiki/Help"]
+            links[:] = [x for x in links if x[:11] != "/wiki/File:" and x[:11] != "/wiki/Help:"]
             for i in range(len(links)):
                 if links[i] in raw_links_modified:
                     location = raw_links_modified.index(links[i])
@@ -118,6 +119,9 @@ def format_list(full_list):
         string = full_list[i][30:]
         string = re.sub("\(.*?\)", "", string)
         string = re.sub("_", " ", string)
+        print("--", string, "--")
+        string = string.strip()
+        print("--", string, "--")
         full_list[i] = string
     return full_list
 
