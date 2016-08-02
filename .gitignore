@@ -2,4 +2,4 @@ env
 *.pyc
 *.pycache
 *!.txt
-noble_manager/nobles_dictionary.json
+*.nobles_dictionary.json
