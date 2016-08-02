@@ -67,7 +67,7 @@ def remove_tags(page, open_tag, close_tag):
 
 def get_next_url(url):
     """uses request to find the next link in the wiki chain"""
-    time.sleep(0.5)
+    time.sleep(0.2)
     wiki_page = requests.get(url)
     wiki_page_text = remove_tags(wiki_page.text, "<table", "</table>")
     paras = re.findall("(<p>.*?</p>|<li>.*?</li>)", wiki_page_text)
@@ -101,9 +101,13 @@ def find_full_list(starting_url):
         print("Analysing %s...\n\n" % next_url)
         next_url = get_next_url(next_url)
         if next_url in full_list:
+            print("LOOK HERE!!!!!!!!!!!!!!!!!!!!!!!!!", full_list)
             location = full_list.index(next_url)
-            full_list = full_list[:(location + 1)]
-            break
+            if location == 0:
+                break
+            else:
+                full_list = full_list[:(location + 1)]
+                break
         if next_url == "https://en.wikipedia.org/wiki/Philosophy":
             full_list.append(next_url)
             break

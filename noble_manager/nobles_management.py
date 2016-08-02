@@ -1,3 +1,5 @@
+import sys
+sys.path.append("noble_manager")
 import copy
 import inspect
 import random
@@ -6,12 +8,12 @@ import json
 class NobleManager:
     """Deals with the normal, day-to-day creation, execution and boring old management of Nobles.
      Probably isn't paid enough"""
-    def __init__(self):
-        self.noble_filename = "nobles_dictionary_beta.json"
+    def __init__(self, nobles_dictionary_filename, noblenames_filename):
+        self.noble_filename =  nobles_dictionary_filename
         self.noble_dictionary = self.load_file(self.noble_filename, {})
         self.noble_instances = self.load_instances()
         self.id_lookup = self.load_id()
-        self.noble_creator_instance = NobleCreator(self)
+        self.noble_creator_instance = NobleCreator(self, noblenames_filename)
 
     def run_events(self):
         noble_runner = NobleRunner(self, self.compile_instance_list())
@@ -143,9 +145,32 @@ class NobleManager:
         with open(self.noble_filename, "w") as file:
             file.write(dump)
 
+class NobleStat:
+    def __init__(self, name, min_value, max_value):
+        self.value = None
+        self.name = name
+        self.min_value = min_value
+        self.max_value = max_value
+
+    def __get__(self, instance, owner):
+        return self.value
+
+    def __set__(self, instance, value):
+        if value > self.max_value:
+            print("New value too high, setting to max value. (Owner: {}, Stat: {}, Value: {}, Max:{})".format(instance, self.name, value, self.max_value))
+            self.value = self.max_value
+        elif value < self.min_value:
+            print("New value too low, setting to min value. (Owner: {}, Stat: {}, Value: {}, Min:{})".format(instance, self.name, value, self.min_value))
+            self.value = self.min_value
+        else:
+            self.value = value
+
 class NobleInstance(NobleManager):
     """A class to turn nobles into objects, rather than just having them sit around in a dictionary. The point
     of thie exercise!"""
+    wealth = NobleStat("wealth", 0, 9999)
+    happiness = NobleStat("happiness", 0, 10)
+    honour = NobleStat("honour", 0, 10)
     def __init__(self, noble_dict, noble_manager):
         self.noble_manager = noble_manager
         self.id = noble_dict["id"]
@@ -221,7 +246,6 @@ class NobleInstance(NobleManager):
             self.happiness -= 1
         return result
 
-
     def do_fuck_all(self):
         self.happiness += 1
         result = "{} sits on their arse for a week. They get happier. Feudalism!".format(self.full_name)
@@ -273,7 +297,6 @@ class NobleInstance(NobleManager):
                 result = "\n{} comes home to find their house on fire. Wait, that's not a prank - that's arson!".format(self.full_name)
         return result
 
-
     def welcome_noble(self, new_noble):
         if new_noble.surname == self.surname:
             print(new_noble.surname)
@@ -294,6 +317,9 @@ class NobleInstance(NobleManager):
         stat_dict = self.__dict__.copy()
         del stat_dict["noble_manager"]
         del stat_dict["available_actions"]
+        stat_dict["wealth"] = self.wealth
+        stat_dict["happiness"] = self.happiness
+        stat_dict["honour"] = self.honour
         return stat_dict
 
     def save_self(self):
@@ -303,7 +329,7 @@ class NobleInstance(NobleManager):
         self.noble_manager.save_file()
 
     def __str__(self):
-        return 'This is an instance of the noble "{}"'.format(self.full_name)
+        return 'NobleInstance: "{}"'.format(self.full_name)
 
     def __repr__(self):
         return '<instance of noble {}>'.format(self.full_name)
@@ -323,7 +349,7 @@ class NobleRunner:
                 string += noble.perform_action()
                 death_message = self.check_for_deaths()
                 if death_message:
-                    string += "\n" + death_message
+                    string += death_message
         return string
 
     def check_for_deaths(self):
@@ -331,10 +357,11 @@ class NobleRunner:
         for name, noble in self.noble_manager.noble_instances.items():
             if noble.marked_for_death == True:
                 death_list.append((name, noble))
+        string = ""
         for name, noble in death_list:
             if noble in self.action_list:
                 self.action_list.remove(noble)
-            return self.noble_manager.execute_noble(name)
+                string += "\n" + self.noble_manager.execute_noble(name)
 
     def __str__(self):
         return "An instance of class NobleRunner"
@@ -344,9 +371,9 @@ class NobleRunner:
 
 class NobleCreator(NobleManager):
     """It's called NobleCreator. Take a wild guess as to what it does"""
-    def __init__(self, NobleManager):
+    def __init__(self, NobleManager, noblenames_filename):
         self.noble_manager = NobleManager
-        self.noblename_filename = "noblenames.json"
+        self.noblename_filename = noblenames_filename
         self.noblenames = self.load_names()
 
     def create_noble(self):
@@ -424,8 +451,9 @@ class NobleCreator(NobleManager):
                 continue
             return default_id
 
+
 if __name__ == "__main__":
-    noble = NobleManager()
+    noble = NobleManager("nobles_dictionary.json", "noblenames.json")
     options = [
     ("Create Noble", noble.create_noble),
     ("Patch Nobles", noble.patch_nobles),

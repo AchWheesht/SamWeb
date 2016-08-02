@@ -1,16 +1,18 @@
+import sys
+sys.path.append("noble_manager")
+sys.path.append("wiki_in_the_valley")
 from flask import Flask, render_template, request, make_response
-import nobles_management_beta
+import nobles_management
 import misc_tools
 import json
 import valley_generator
-import sys
 import time
 
 wiki_in_use = False
 test_phrase = "hello!"
 
 app = Flask(__name__)
-NobleManager = nobles_management_beta.NobleManager()
+NobleManager = nobles_management.NobleManager("noble_manager/nobles_dictionary.json", "noble_manager/noblenames.json")
 
 @app.route("/")
 def index():
