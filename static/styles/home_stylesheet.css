@@ -1,24 +1,41 @@
-.headerDiv {
-  height: 15vh;
+body {
+  background: black;
 }
 
-.leftButtonDiv {
-  display: inline-block;
-  border: 5px solid red;
-  height: 20vh;
-  width: 30vw;
+.buffer {
 }
 
-.middleButtonDiv {
-  display: inline-block;
-  border: 5px solid red;
-  height: 20vh;
-  width: 30vw;
+.top {
+  width: 10vw;
+  height: 25vh;
 }
 
-.rightButtonDiv {
+.left {
+  display: inline-block;
+  height: 30vh;
+  width: 25vw;
+}
+
+.box {
+  display: inline-block;
+  width: 50vw;
+  height: 50vh;
+}
+
+.div {
   display: inline-block;
   border: 5px solid red;
-  height: 20vh;
-  width: 30vw;
+  height: 45%;
+  width: 45%;
+}
+
+.text {
+  font-size: 175%;
+  margin-top: 20%;
+  color: white;
+}
+
+.middleDiv {
+  width: 98%;
+  height: 2%;
 }

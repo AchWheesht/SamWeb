@@ -2,4 +2,4 @@ env
 *.pyc
 *.pycache
 *!.txt
-*.nobles_dictionary.json
+*nobles_dictionary.json

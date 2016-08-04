@@ -18,6 +18,10 @@ NobleManager = nobles_management.NobleManager("noble_manager/nobles_dictionary.j
 def index():
     return render_template("home_template.html")
 
+@app.route("/blank")
+def blank():
+    return render_template("blank.html")
+
 @app.route("/noblehq")
 def noblehq():
     name_list = NobleManager.id_lookup
