@@ -1,0 +1,24 @@
+.headerDiv {
+  height: 15vh;
+}
+
+.leftButtonDiv {
+  display: inline-block;
+  border: 5px solid red;
+  height: 20vh;
+  width: 30vw;
+}
+
+.middleButtonDiv {
+  display: inline-block;
+  border: 5px solid red;
+  height: 20vh;
+  width: 30vw;
+}
+
+.rightButtonDiv {
+  display: inline-block;
+  border: 5px solid red;
+  height: 20vh;
+  width: 30vw;
+}
