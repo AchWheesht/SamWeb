@@ -24,6 +24,7 @@ body {
 
 .div {
   display: inline-block;
+  cursor: pointer;
   border: 5px solid red;
   height: 45%;
   width: 45%;
