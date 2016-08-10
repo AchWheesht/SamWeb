@@ -1,0 +1,256 @@
+<NobleManager object>:#load_file#
+<NobleManager object>:#load_instances#
+NobleInstance: "Fiona Shaw": __init__
+NobleInstance: "Sam Leech": __init__
+NobleInstance: "Henry Hatchet": __init__
+NobleInstance: "Curly Callarman-Williams": __init__
+<NobleManager object>:#load_id#
+NobleCreator instance: load_names
+New instance of NobleCreator
+<NobleManager object>:#create_noble#
+NobleCreator instance: create_noble
+NobleCreator instance: create_noble_name. (f, 1)
+NobleCreator instance: find_appropriate_id
+NobleCreator instance: generate_relations
+NobleInstance: "Mercy Creely": __init__
+NobleInstance: "Fiona Shaw": welcome_noble, (NobleInstance: "Mercy Creely")
+NobleInstance: "Sam Leech": welcome_noble, (NobleInstance: "Mercy Creely")
+NobleInstance: "Henry Hatchet": welcome_noble, (NobleInstance: "Mercy Creely")
+NobleInstance: "Curly Callarman-Williams": welcome_noble, (NobleInstance: "Mercy Creely")
+NobleInstance: "Mercy Creely": compile_dict
+<NobleManager object>:#save_file#
+created noble Mercy Creely
+<NobleManager object>:#create_noble#
+NobleCreator instance: create_noble
+NobleCreator instance: create_noble_name. (f, 3)
+NobleCreator instance: find_appropriate_id
+NobleCreator instance: generate_relations
+NobleInstance: "Leela Preed": __init__
+NobleInstance: "Fiona Shaw": welcome_noble, (NobleInstance: "Leela Preed")
+NobleInstance: "Mercy Creely": welcome_noble, (NobleInstance: "Leela Preed")
+NobleInstance: "Sam Leech": welcome_noble, (NobleInstance: "Leela Preed")
+NobleInstance: "Henry Hatchet": welcome_noble, (NobleInstance: "Leela Preed")
+NobleInstance: "Curly Callarman-Williams": welcome_noble, (NobleInstance: "Leela Preed")
+NobleInstance: "Leela Preed": compile_dict
+<NobleManager object>:#save_file#
+created noble Leela Preed
+<NobleManager object>:#create_noble#
+NobleCreator instance: create_noble
+NobleCreator instance: create_noble_name. (f, 7)
+NobleCreator instance: find_appropriate_id
+NobleCreator instance: generate_relations
+NobleInstance: "Megan Robertson": __init__
+NobleInstance: "Fiona Shaw": welcome_noble, (NobleInstance: "Megan Robertson")
+NobleInstance: "Leela Preed": welcome_noble, (NobleInstance: "Megan Robertson")
+NobleInstance: "Sam Leech": welcome_noble, (NobleInstance: "Megan Robertson")
+NobleInstance: "Curly Callarman-Williams": welcome_noble, (NobleInstance: "Megan Robertson")
+NobleInstance: "Mercy Creely": welcome_noble, (NobleInstance: "Megan Robertson")
+NobleInstance: "Henry Hatchet": welcome_noble, (NobleInstance: "Megan Robertson")
+NobleInstance: "Megan Robertson": compile_dict
+<NobleManager object>:#save_file#
+created noble Megan Robertson
+<NobleManager object>:#run_events#
+<NobleManager object>:#compile_instance_list#
+New instance of NobleRunner
+NobleRunner Instance: run_events
+NobleInstance: "Fiona Shaw": perform_action
+NobleInstance: "Fiona Shaw": duel_noble
+NobleInstance: "Megan Robertson": receive_duel_proposal (NobleInstance: "Fiona Shaw")
+NobleInstance: "Fiona Shaw": save_self
+NobleInstance: "Fiona Shaw": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Leela Preed": perform_action
+NobleInstance: "Leela Preed": invest_capital
+NobleInstance: "Leela Preed": save_self
+NobleInstance: "Leela Preed": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Sam Leech": perform_action
+NobleInstance: "Sam Leech": duel_noble
+NobleInstance: "Mercy Creely": receive_duel_proposal (NobleInstance: "Sam Leech")
+NobleInstance: "Sam Leech": save_self
+NobleInstance: "Sam Leech": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Curly Callarman-Williams": perform_action
+NobleInstance: "Curly Callarman-Williams": invest_capital
+NobleInstance: "Curly Callarman-Williams": save_self
+NobleInstance: "Curly Callarman-Williams": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Mercy Creely": perform_action
+NobleInstance: "Mercy Creely": duel_noble
+NobleInstance: "Fiona Shaw": receive_duel_proposal (NobleInstance: "Mercy Creely")
+NobleInstance: "Mercy Creely": save_self
+NobleInstance: "Mercy Creely": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Megan Robertson": perform_action
+NobleInstance: "Megan Robertson": duel_noble
+NobleInstance: "Sam Leech": receive_duel_proposal (NobleInstance: "Megan Robertson")
+NobleInstance: "Megan Robertson": save_self
+NobleInstance: "Megan Robertson": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Henry Hatchet": perform_action
+NobleInstance: "Henry Hatchet": invest_capital
+NobleInstance: "Henry Hatchet": save_self
+NobleInstance: "Henry Hatchet": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+<NobleManager object>:#run_events#
+<NobleManager object>:#compile_instance_list#
+New instance of NobleRunner
+NobleRunner Instance: run_events
+NobleInstance: "Fiona Shaw": perform_action
+NobleInstance: "Fiona Shaw": duel_noble
+NobleInstance: "Curly Callarman-Williams": receive_duel_proposal (NobleInstance: "Fiona Shaw")
+NobleInstance: "Fiona Shaw": save_self
+NobleInstance: "Fiona Shaw": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Leela Preed": perform_action
+NobleInstance: "Leela Preed": prank_noble
+NobleInstance: "Fiona Shaw": get_pranked (NobleInstance: "Leela Preed")
+NobleInstance: "Leela Preed": save_self
+NobleInstance: "Leela Preed": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Sam Leech": perform_action
+NobleInstance: "Sam Leech": invest_capital
+NobleInstance: "Sam Leech": save_self
+NobleInstance: "Sam Leech": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Curly Callarman-Williams": perform_action
+NobleInstance: "Curly Callarman-Williams": do_fuck_all
+NobleInstance: "Curly Callarman-Williams": save_self
+NobleInstance: "Curly Callarman-Williams": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Mercy Creely": perform_action
+NobleInstance: "Mercy Creely": prank_noble
+NobleInstance: "Sam Leech": get_pranked (NobleInstance: "Mercy Creely")
+NobleInstance: "Mercy Creely": save_self
+NobleInstance: "Mercy Creely": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Megan Robertson": perform_action
+NobleInstance: "Megan Robertson": invest_capital
+NobleInstance: "Megan Robertson": save_self
+NobleInstance: "Megan Robertson": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Henry Hatchet": perform_action
+NobleInstance: "Henry Hatchet": duel_noble
+NobleInstance: "Megan Robertson": receive_duel_proposal (NobleInstance: "Henry Hatchet")
+NobleInstance: "Henry Hatchet": save_self
+NobleInstance: "Henry Hatchet": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+<NobleManager object>:#run_events#
+<NobleManager object>:#compile_instance_list#
+New instance of NobleRunner
+NobleRunner Instance: run_events
+NobleInstance: "Fiona Shaw": perform_action
+NobleInstance: "Fiona Shaw": duel_noble
+NobleInstance: "Megan Robertson": receive_duel_proposal (NobleInstance: "Fiona Shaw")
+NobleInstance: "Fiona Shaw": save_self
+NobleInstance: "Fiona Shaw": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Leela Preed": perform_action
+NobleInstance: "Leela Preed": do_fuck_all
+NobleInstance: "Leela Preed": save_self
+NobleInstance: "Leela Preed": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Sam Leech": perform_action
+NobleInstance: "Sam Leech": do_fuck_all
+NobleInstance: "Sam Leech": save_self
+NobleInstance: "Sam Leech": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Curly Callarman-Williams": perform_action
+NobleInstance: "Curly Callarman-Williams": prank_noble
+NobleInstance: "Henry Hatchet": get_pranked (NobleInstance: "Curly Callarman-Williams")
+NobleInstance: "Curly Callarman-Williams": save_self
+NobleInstance: "Curly Callarman-Williams": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Mercy Creely": perform_action
+NobleInstance: "Mercy Creely": prank_noble
+NobleInstance: "Sam Leech": get_pranked (NobleInstance: "Mercy Creely")
+NobleInstance: "Mercy Creely": save_self
+NobleInstance: "Mercy Creely": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Megan Robertson": perform_action
+NobleInstance: "Megan Robertson": do_fuck_all
+NobleInstance: "Megan Robertson": save_self
+NobleInstance: "Megan Robertson": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Henry Hatchet": perform_action
+NobleInstance: "Henry Hatchet": prank_noble
+NobleInstance: "Curly Callarman-Williams": get_pranked (NobleInstance: "Henry Hatchet")
+NobleInstance: "Henry Hatchet": save_self
+NobleInstance: "Henry Hatchet": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+<NobleManager object>:#run_events#
+<NobleManager object>:#compile_instance_list#
+New instance of NobleRunner
+NobleRunner Instance: run_events
+NobleInstance: "Fiona Shaw": perform_action
+NobleInstance: "Fiona Shaw": prank_noble
+NobleInstance: "Henry Hatchet": get_pranked (NobleInstance: "Fiona Shaw")
+NobleInstance: "Fiona Shaw": save_self
+NobleInstance: "Fiona Shaw": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Leela Preed": perform_action
+NobleInstance: "Leela Preed": do_fuck_all
+NobleInstance: "Leela Preed": save_self
+NobleInstance: "Leela Preed": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Sam Leech": perform_action
+NobleInstance: "Sam Leech": duel_noble
+NobleInstance: "Megan Robertson": receive_duel_proposal (NobleInstance: "Sam Leech")
+NobleInstance: "Sam Leech": save_self
+NobleInstance: "Sam Leech": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Curly Callarman-Williams": perform_action
+NobleInstance: "Curly Callarman-Williams": duel_noble
+NobleInstance: "Henry Hatchet": receive_duel_proposal (NobleInstance: "Curly Callarman-Williams")
+NobleInstance: "Curly Callarman-Williams": save_self
+NobleInstance: "Curly Callarman-Williams": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+<NobleManager object>:#execute_noble#, (Henry Hatchet)
+<NobleManager object>:#load_instances#
+NobleInstance: "Fiona Shaw": __init__
+NobleInstance: "Leela Preed": __init__
+NobleInstance: "Sam Leech": __init__
+NobleInstance: "Curly Callarman-Williams": __init__
+NobleInstance: "Mercy Creely": __init__
+NobleInstance: "Megan Robertson": __init__
+<NobleManager object>:#load_id#
+<NobleManager object>:#save_file#
+NobleInstance: "Mercy Creely": perform_action
+NobleInstance: "Mercy Creely": prank_noble
+NobleInstance: "Curly Callarman-Williams": get_pranked (NobleInstance: "Mercy Creely")
+NobleInstance: "Mercy Creely": save_self
+NobleInstance: "Mercy Creely": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+NobleInstance: "Megan Robertson": perform_action
+NobleInstance: "Megan Robertson": invest_capital
+NobleInstance: "Megan Robertson": save_self
+NobleInstance: "Megan Robertson": compile_dict
+<NobleManager object>:#save_file#
+NobleRunner Instance: check_for_deaths
+<NobleManager object>:#view_nobles#

@@ -1,5 +1,5 @@
 import sys
-sys.path.append("noble_manager")
+sys.path.append("sam_game")
 sys.path.append("wiki_in_the_valley")
 from flask import Flask, render_template, request, make_response
 import nobles_management
@@ -89,9 +89,7 @@ def wiki_in_the_valley_o():
 @app.route("/get_song", methods=["POST"])
 def get_song():
     global wiki_in_use
-    print("INVOKED")
     url = request.form["url"]
-    print(url[:25])
     if url[:24] != "https://en.wikipedia.org" and url[:25] != "https://www.wikipedia.org":
         return json.dumps(("use a wikipedia url!", "use a wikipedia url!"))
     while True:
@@ -103,8 +101,6 @@ def get_song():
             break
     list_and_song = valley_generator.make_a_song(url)
     wiki_in_use = False
-    print("List:\n\n", list_and_song[0])
-    print("Song:\n\n", list_and_song[1])
     list_and_song[0] = list_to_string(list_and_song[0])
     response = json.dumps(list_and_song)
     return response

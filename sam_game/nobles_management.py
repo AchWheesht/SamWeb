@@ -5,34 +5,89 @@ import inspect
 import random
 import json
 
+class LogStat:
+    def __init__(self):
+        self.log = []
+
+    def __get__(self, instance, owner):
+        return self.log
+
+    def __set__(self, instance, value):
+        self.log.append(value)
+
+class LogClass:
+    log = LogStat()
+
 class NobleManager:
     """Deals with the normal, day-to-day creation, execution and boring old management of Nobles.
      Probably isn't paid enough"""
-    def __init__(self, nobles_dictionary_filename, noblenames_filename):
+    def log_wrapper(func):
+        def func_wrapper(*args):
+            me = None
+            if func.__name__ == "__init__":
+                func(*args)
+            self = args[0]
+            func_signature = inspect.signature(func)
+            func_parameters = func_signature.parameters
+            func_args = args
+            arg_list = []
+            for item in func_parameters:
+                arg_list.append(item)
+            for i in range(len(arg_list)):
+                param = arg_list[i]
+                try: arg = func_args[i]
+                except IndexError: arg = None
+                arg_list[i] = (param, arg)
+            owner = arg_list[0][1] if arg_list[0][0] == "self" else None
+            string = "{} Func={} Args:".format(owner, func.__name__)
+            for item in arg_list:
+                string += "({}={})".format(item[0], item[1])
+            self.log.log = string
+            if func.__name__ == "__init__":
+                return
+            return func(*args)
+        return func_wrapper
+
+    @log_wrapper
+    def __init__(self, nobles_dictionary_filename, noblenames_filename, log):
+        self.log = log
         self.noble_filename =  nobles_dictionary_filename
         self.noble_dictionary = self.load_file(self.noble_filename, {})
         self.noble_instances = self.load_instances()
         self.id_lookup = self.load_id()
-        self.noble_creator_instance = NobleCreator(self, noblenames_filename)
+        self.noble_creator_instance = NobleCreator(self, noblenames_filename, log)
 
+    @log_wrapper
+    def export_noble(self, noble_name, message):
+        if type(noble_name) == int:
+            noble_name = self.get_name_from_id(noble_name)
+        noble_instance = noble_instances[noble_name]
+        noble_instance.export_messages.append(message)
+        return noble_instance
+
+    @log_wrapper
     def run_events(self):
-        noble_runner = NobleRunner(self, self.compile_instance_list())
+        noble_runner = NobleRunner(self, self.compile_instance_list(), self.log)
         return noble_runner.run_events()
 
+    @log_wrapper
     def compile_instance_list(self):
         noble_list = []
         for name, noble in self.noble_instances.items():
             noble_list.append(noble)
         return noble_list
 
+    @log_wrapper
     def torment_nobles(self):
         for noble in self.compile_instance_list():
             noble.happiness -= 1
             return "\nYou make {} very unhappy!".format(noble.full_name)
 
+    @log_wrapper
     def list_names(self):
         return self.id_lookup
 
+    @log_wrapper
     def view_nobles(self):
         noble_list = []
         for name, noble in self.noble_instances.items():
@@ -43,12 +98,14 @@ class NobleManager:
             string += ("\n{}\nNobility: {}\nWealth: {}\nHappiness: {}\n".format(noble.extended_title, noble.nobility, noble.wealth, noble.happiness))
         return string
 
+    @log_wrapper
     def view_single_noble(self, name):
         if type(name) == int:
             name = get_name_from_id(name)
         noble = self.noble_instances[name]
         return "{}\nNobility: {}\nWealth: {}\nHappiness: {}".format(noble.extended_title, noble.nobility, noble.wealth, noble.happiness)
 
+    @log_wrapper
     def execute_noble(self, full_name, death_message = None):
         noble_instance = self.noble_instances[full_name]
         if not death_message: death_message = noble_instance.death_message
@@ -64,6 +121,7 @@ class NobleManager:
         else:
             return death_message
 
+    @log_wrapper
     def execute_all(self):
         self.noble_dictionary = {}
         self.id_lookup = []
@@ -71,6 +129,7 @@ class NobleManager:
         self.save_file()
         return("Everybody's dead, Dave")
 
+    @log_wrapper
     def patch_nobles(self, stat, value, mode="ignore"):
         """Adds or modifies a single stat of all nobles"""
         for noble in self.noble_dictionary:
@@ -81,6 +140,7 @@ class NobleManager:
             except KeyError:
                 if mode != "delete": self.noble_dictionary[noble][stat] = value
 
+    @log_wrapper
     def create_noble(self):
         """Uses the NobleCreator instance to create a new noble, and automitically creates an NobleInstance for it"""
         new_noble_instance = self.noble_creator_instance.create_noble()
@@ -96,6 +156,7 @@ class NobleManager:
             string += "\n{}".format(item)
         return string
 
+    @log_wrapper
     def view_relations(self, name):
         string = ""
         noble = self.noble_instances[name]
@@ -103,6 +164,7 @@ class NobleManager:
             string += "{}: {}\n".format(name, value)
         return string
 
+    @log_wrapper
     def get_name_from_id(self, ident):
         try:
             ident = int(ident)
@@ -112,23 +174,26 @@ class NobleManager:
             if item[1] == ident: return item[0]
         return("ERROR")
 
+    @log_wrapper
     def load_instances(self):
         """Uses nobles_dictionary to create seperate NobleInstance instances of all nobles, and stores
         them in self.nobles_instances"""
         instances = {}
         for noble, stats in self.noble_dictionary.items():
             try:
-                instances[noble] = NobleInstance(stats, self)
+                instances[noble] = NobleInstance(stats, self, self.log)
             except KeyError as e:
                 print("Error! {} is missing a stat. ({})".format(stats["full_name"], e))
         return instances
 
+    @log_wrapper
     def load_id(self):
         id_list = []
         for name, noble in self.noble_instances.items():
             id_list.append((noble.full_name, noble.id))
         return id_list
 
+    @log_wrapper
     def load_file(self, var_file, default = None):
         """Loads specified file"""
         try:
@@ -139,11 +204,18 @@ class NobleManager:
             print('"%s": File not found' % var_file)
             return default
 
+    @log_wrapper
     def save_file(self):
         """Saves self.nobles_dictionary and self.id_lookup"""
         dump = json.dumps(self.noble_dictionary)
         with open(self.noble_filename, "w") as file:
             file.write(dump)
+
+    def __str__(self):
+        return "<NobleManager object>"
+
+    def __repr__(self):
+        return "<NobleManager object>"
 
 class NobleStat:
     def __init__(self, name, min_value, max_value):
@@ -171,7 +243,9 @@ class NobleInstance(NobleManager):
     wealth = NobleStat("wealth", 0, 9999)
     happiness = NobleStat("happiness", 0, 10)
     honour = NobleStat("honour", 0, 10)
-    def __init__(self, noble_dict, noble_manager):
+    @NobleManager.log_wrapper
+    def __init__(self, noble_dict, noble_manager, log):
+        self.log = log
         self.noble_manager = noble_manager
         self.id = noble_dict["id"]
         self.gender = noble_dict["gender"]
@@ -190,10 +264,12 @@ class NobleInstance(NobleManager):
             self.prank_noble,
             self.duel_noble
             ]
+        self.export_messages = []
         self.marked_for_death = False
         self.death_message = "I shouldn't be dead!"
         self.ram_status = None
 
+    @NobleManager.log_wrapper
     def perform_action(self, action=None, *args):
         result = None
         if self.happiness < 0:
@@ -203,12 +279,14 @@ class NobleInstance(NobleManager):
         self.save_self()
         return result
 
+    @NobleManager.log_wrapper
     def end_it(self):
         result = "{0} isn't looking too happy...".format(self.full_name)
         self.marked_for_death = True
         self.death_message = "{0}  is far too unhappy to be a noble. They slink off into solitude. Goodbye, {0}!".format(self.full_name)
         return result
 
+    @NobleManager.log_wrapper
     def duel_noble(self):
         valid_list = []
         for name, value in self.relations.items():
@@ -235,6 +313,7 @@ class NobleInstance(NobleManager):
             winner.ram_status = None
             return result
 
+    @NobleManager.log_wrapper
     def receive_duel_proposal(self, duel_proposer):
         bravery_roll = random.randint(1, 10)
         if bravery_roll <= self.honour:
@@ -246,11 +325,13 @@ class NobleInstance(NobleManager):
             self.happiness -= 1
         return result
 
+    @NobleManager.log_wrapper
     def do_fuck_all(self):
         self.happiness += 1
         result = "{} sits on their arse for a week. They get happier. Feudalism!".format(self.full_name)
         return result
 
+    @NobleManager.log_wrapper
     def invest_capital(self):
         success = random.randrange(-50, 100, 1)
         percentage = success / 1000
@@ -264,6 +345,7 @@ class NobleInstance(NobleManager):
         self.wealth = int(self.wealth*(1 + percentage))
         return result
 
+    @NobleManager.log_wrapper
     def prank_noble(self, prankee=None):
         if not prankee:
             candidate_list = []
@@ -278,6 +360,7 @@ class NobleInstance(NobleManager):
         result += reaction
         return result
 
+    @NobleManager.log_wrapper
     def get_pranked(self, pranker=None):
         if not pranker:
             result = "\n{} gets pranked by a ghost. Spooky! (Error)".format(self.full_name)
@@ -297,6 +380,7 @@ class NobleInstance(NobleManager):
                 result = "\n{} comes home to find their house on fire. Wait, that's not a prank - that's arson!".format(self.full_name)
         return result
 
+    @NobleManager.log_wrapper
     def welcome_noble(self, new_noble):
         if new_noble.surname == self.surname:
             print(new_noble.surname)
@@ -313,15 +397,18 @@ class NobleInstance(NobleManager):
         self.relations[new_noble.full_name] = friendship
         return string
 
+    @NobleManager.log_wrapper
     def compile_dict(self):
         stat_dict = self.__dict__.copy()
         del stat_dict["noble_manager"]
         del stat_dict["available_actions"]
+        del stat_dict["log"]
         stat_dict["wealth"] = self.wealth
         stat_dict["happiness"] = self.happiness
         stat_dict["honour"] = self.honour
         return stat_dict
 
+    @NobleManager.log_wrapper
     def save_self(self):
         """NobleManager passes itself to each NobleInstance to let this work"""
         stat_dict = self.compile_dict()
@@ -329,16 +416,19 @@ class NobleInstance(NobleManager):
         self.noble_manager.save_file()
 
     def __str__(self):
-        return 'NobleInstance: "{}"'.format(self.full_name)
+        return '<NobleInstance: "{}">'.format(self.full_name)
 
     def __repr__(self):
         return '<instance of noble {}>'.format(self.full_name)
 
-class NobleRunner:
-    def __init__(self, noble_manager, action_list):
+class NobleRunner(NobleManager):
+    @NobleManager.log_wrapper
+    def __init__(self, noble_manager, action_list, log):
+        self.log = log
         self.noble_manager = noble_manager
         self.action_list = action_list
 
+    @NobleManager.log_wrapper
     def run_events(self):
         string = ""
         for noble in self.action_list:
@@ -352,6 +442,7 @@ class NobleRunner:
                     string += death_message
         return string
 
+    @NobleManager.log_wrapper
     def check_for_deaths(self):
         death_list = []
         for name, noble in self.noble_manager.noble_instances.items():
@@ -364,18 +455,21 @@ class NobleRunner:
                 string += "\n" + self.noble_manager.execute_noble(name)
 
     def __str__(self):
-        return "An instance of class NobleRunner"
+        return "<NobleRunner Instance>"
 
     def __repr__(self):
         return "<instance of class NobleRunner>"
 
 class NobleCreator(NobleManager):
     """It's called NobleCreator. Take a wild guess as to what it does"""
-    def __init__(self, NobleManager, noblenames_filename):
+    @NobleManager.log_wrapper
+    def __init__(self, NobleManager, noblenames_filename, log):
+        self.log = log
         self.noble_manager = NobleManager
         self.noblename_filename = noblenames_filename
         self.noblenames = self.load_names()
 
+    @NobleManager.log_wrapper
     def create_noble(self):
         """It's called create_noble. Take a wild guess as to what it does"""
         noble = {}
@@ -391,20 +485,23 @@ class NobleCreator(NobleManager):
         noble["wealth"] = random.randint(10, 9999)
         noble["happiness"] = random.randint(1, 10)
         noble["honour"] = random.randint(1, 10)
-        noble_instance = NobleInstance(noble, self.noble_manager)
+        noble_instance = NobleInstance(noble, self.noble_manager, self.log)
         return noble_instance
 
+    @NobleManager.log_wrapper
     def generate_relations(self):
         relations_dict = {}
         for name, noble in self.noble_manager.noble_instances.items():
             relations_dict[name] = random.randint(1,10)
         return relations_dict
 
+    @NobleManager.log_wrapper
     def load_names(self):
         with open(self.noblename_filename, "r") as file:
             coded = file.read()
         return json.loads(coded)
 
+    @NobleManager.log_wrapper
     def create_noble_name(self, gender, nobility):
         flag = True
         while flag == True:
@@ -439,6 +536,7 @@ class NobleCreator(NobleManager):
 
         return[full_name, surname, full_title, extended_title]
 
+    @NobleManager.log_wrapper
     def find_appropriate_id(self):
         """Nobles need to have distinct identification numbers. This lets that happen"""
         default_id = 100
@@ -451,9 +549,15 @@ class NobleCreator(NobleManager):
                 continue
             return default_id
 
+    def __str__(self):
+        return "<NobleCreator instance>"
+
+    def __repr__(self):
+        return "NobleCreator instance"
 
 if __name__ == "__main__":
-    noble = NobleManager("nobles_dictionary.json", "noblenames.json")
+    log = LogClass()
+    noble = NobleManager("nobles_dictionary.json", "noblenames.json", log)
     options = [
     ("Create Noble", noble.create_noble),
     ("Patch Nobles", noble.patch_nobles),
@@ -480,8 +584,4 @@ if __name__ == "__main__":
             method = options[choice][1]
         except IndexError:
             print("Not a valid choice homie")
-        dependancy_list = inspect.signature(method)
-        arg_list = []
-        for item in dependancy_list.parameters:
-            arg_list.append(input("Need argument: {}\n".format(item)))
-        print("\n{}".format(method(*arg_list)))
+        print("\n{}".format(method()))
