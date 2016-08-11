@@ -65,10 +65,6 @@ class NobleManager:
         noble_instance.export_messages.append(message)
         return noble_instance
 
-    @log_wrapper
-    def run_events(self):
-        noble_runner = NobleRunner(self, self.compile_instance_list(), self.log)
-        return noble_runner.run_events()
 
     @log_wrapper
     def compile_instance_list(self):
@@ -420,45 +416,6 @@ class NobleInstance(NobleManager):
 
     def __repr__(self):
         return '<instance of noble {}>'.format(self.full_name)
-
-class NobleRunner(NobleManager):
-    @NobleManager.log_wrapper
-    def __init__(self, noble_manager, action_list, log):
-        self.log = log
-        self.noble_manager = noble_manager
-        self.action_list = action_list
-
-    @NobleManager.log_wrapper
-    def run_events(self):
-        string = ""
-        for noble in self.action_list:
-            if noble.marked_for_death:
-                string += "{} would do something, but most of their time is being taken up by being dead".format(noble.full_name)
-            else:
-                string += "\n\n"
-                string += noble.perform_action()
-                death_message = self.check_for_deaths()
-                if death_message:
-                    string += death_message
-        return string
-
-    @NobleManager.log_wrapper
-    def check_for_deaths(self):
-        death_list = []
-        for name, noble in self.noble_manager.noble_instances.items():
-            if noble.marked_for_death == True:
-                death_list.append((name, noble))
-        string = ""
-        for name, noble in death_list:
-            if noble in self.action_list:
-                self.action_list.remove(noble)
-                string += "\n" + self.noble_manager.execute_noble(name)
-
-    def __str__(self):
-        return "<NobleRunner Instance>"
-
-    def __repr__(self):
-        return "<instance of class NobleRunner>"
 
 class NobleCreator(NobleManager):
     """It's called NobleCreator. Take a wild guess as to what it does"""
