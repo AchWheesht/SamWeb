@@ -11,8 +11,10 @@ def regex_url(para, mode=False):
     if mode:
         parens = find_parens_links(para)
     if links:
+        print("Url's found:")
         to_remove = []
         for item in links:
+            print(item)
             if item in parens:
                 to_remove.append(item)
         for item in to_remove:
@@ -26,6 +28,7 @@ def find_parens_links(para):
         urls = regex_url(item)
         for url in urls:
             parens_urls.add(url)
+    print(parens_urls)
     return parens_urls
 
 def remove_tables(page):
@@ -83,6 +86,7 @@ def get_next_url(url):
                     location = raw_links_modified.index(links[i])
                     links[i] = raw_links[location]
             break
+    print(links)
     try:
         link = links[0][:-1]
     except IndexError: return
@@ -97,6 +101,7 @@ def find_full_list(starting_url):
         print("Analysing %s...\n\n" % next_url)
         next_url = get_next_url(next_url)
         if next_url in full_list:
+            print("LOOK HERE!!!!!!!!!!!!!!!!!!!!!!!!!", full_list)
             location = full_list.index(next_url)
             if location == 0:
                 break
@@ -109,6 +114,7 @@ def find_full_list(starting_url):
         if next_url:
             full_list.append(next_url)
         if not next_url:
+            print(full_list)
             break
     return full_list
 
@@ -117,7 +123,9 @@ def format_list(full_list):
         string = full_list[i][30:]
         string = re.sub("\(.*?\)", "", string)
         string = re.sub("_", " ", string)
+        print("--", string, "--")
         string = string.strip()
+        print("--", string, "--")
         full_list[i] = string
     return full_list
 

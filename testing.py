@@ -1,9 +1,23 @@
-value_type = int
+import random
 
-number = 6
-better_number = 6.5
-string = "Hello"
+class Descriptor:
+    def __init__(self):
+        self.value = 10
 
-print(value_type(number))
-print(value_type(better_number))
-print(value_type(string))
+    def __get__(self, instance, owner):
+        print("GET")
+        return self.value
+
+    def __set__(self, instance, value):
+        print("SET")
+        self.value = value
+
+class Values(object):
+    number = Descriptor()
+    def __init__(self, value):
+        self.number = value
+
+value = Values(7)
+print(value.number)
+value.number = 5
+print(value.number)
